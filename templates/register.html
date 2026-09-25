@@ -84,6 +84,7 @@
                 Minimum 2 members, Maximum 4 members per team.
             </p>
             <form action="/register" method="POST" id="regForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                 <div class="form-group">
                     <label>Team Name</label>

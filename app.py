@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
 from database import (
     init_db,
@@ -12,6 +13,7 @@ from database import (
 )
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 app.secret_key = os.getenv('SECRET_KEY')
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
