@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from database import (
     init_db,
     create_team,
@@ -13,6 +15,11 @@ from database import (
 )
 
 app = Flask(__name__)
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"]
+)
 csrf = CSRFProtect(app)
 app.secret_key = os.getenv('SECRET_KEY')
 app.config['SESSION_COOKIE_SECURE'] = True
@@ -36,6 +43,7 @@ def index():
 
 
 @app.route('/register', methods=['GET', 'POST'])
+@limiter.limit("10 per hour")
 def register():
     if request.method == 'POST':
         team_name = request.form.get('team_name', '').strip()
@@ -43,6 +51,12 @@ def register():
         leader_email = request.form.get('leader_email', '').strip().lower()
         leader_phone = request.form.get('leader_phone', '').strip()
         leader_status = request.form.get('leader_status', 'Not Specified')
+
+        if len(team_name) > 100 or len(leader_name) > 100:
+            return "Team or leader name is too long.", 400
+
+        if len(leader_email) > 254 or len(leader_phone) > 20:
+            return "Email or phone number is too long.", 400
 
         if not team_name or not leader_name or not leader_email or not leader_phone:
             return "Team and leader details are required!", 400
@@ -61,6 +75,9 @@ def register():
                 status = request.form.get(status_key, 'Not Specified')
                 name = member_names[i].strip() if i < len(member_names) else "Unknown"
                 phone = member_phones[i].strip() if i < len(member_phones) else ""
+
+                if len(name) > 100 or len(email) > 254 or len(phone) > 20:
+                    return "Member details are too long.", 400
 
                 members.append({
                     "name": name,
@@ -153,7 +170,8 @@ def login_page():
     return render_template('login.html')
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("10 per hour")
 def login():
     email = request.form.get('email', '').strip().lower()
 
