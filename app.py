@@ -16,9 +16,6 @@ app.secret_key = 'nimbus_secret_key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB limit
 
-if not os.path.exists(app.config['UPLOAD_FOLDER']):
-    os.makedirs(app.config['UPLOAD_FOLDER'])
-
 if not os.path.exists('static/images'):
     os.makedirs('static/images')
 
