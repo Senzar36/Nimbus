@@ -19,7 +19,7 @@ app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB limit
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 
 if not os.path.exists('static/images'):
     os.makedirs('static/images')
