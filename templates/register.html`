@@ -9,65 +9,49 @@
         .member-row {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 1rem;
-            padding: 1.5rem;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            border: 1px solid var(--border);
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border: 1px solid #333;
             position: relative;
-            transition: all 0.3s ease;
         }
-        .member-row:hover {
-            border-color: var(--cyan);
-            background: rgba(255,255,255,0.06);
+        .member-row input {
+            padding: 0.6rem;
         }
         .section-title {
-            color: var(--cyan);
-            margin: 2rem 0 1rem 0;
-            border-bottom: 1px solid var(--border);
+            color: var(--accent);
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 1px solid #333;
             padding-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.9rem;
         }
         .remove-btn {
             position: absolute;
-            right: -40px;
-            top: 15px;
+            right: -30px;
+            top: 10px;
             background: var(--error);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             line-height: 1;
-            transition: all 0.2s ease;
-        }
-        .remove-btn:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 10px var(--error);
         }
         .radio-group {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
-            margin: 15px 0;
-            color: var(--text);
+            margin: 10px 0;
+            color: var(--text-main);
         }
         .radio-group label {
             display: inline;
             margin: 0;
             cursor: pointer;
             font-weight: normal;
-            color: var(--muted);
-            transition: color 0.3s ease;
-        }
-        .radio-group input:checked + label {
-            color: var(--cyan);
-            text-shadow: 0 0 5px var(--cyan);
         }
     </style>
 </head>
@@ -78,16 +62,16 @@
     </header>
 
     <div class="container">
-        <div class="card" style="max-width: 850px; margin: 0 auto;">
-            <h2 style="text-align: center; margin-bottom: 0.5rem; color: #fff;">Team Registration</h2>
-            <p style="text-align: center; color: var(--muted); margin-bottom: 2.5rem;">
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <h2 style="text-align: center;">Team Registration</h2>
+            <p style="text-align: center; color: var(--text-dim); margin-bottom: 2rem;">
                 Minimum 2 members, Maximum 4 members per team.
             </p>
             <form action="/register" method="POST" id="regForm">
 
                 <div class="form-group">
                     <label>Team Name</label>
-                    <input type="text" name="team_name" required placeholder="Enter a futuristic team name">
+                    <input type="text" name="team_name" required placeholder="Enter a cool team name">
                 </div>
 
                 <div class="section-title">Leader Details</div>
@@ -118,15 +102,15 @@
 
                 <div class="section-title">Team Members</div>
                 <div id="members-container">
-                    <!-- Member rows added by JS -->
+                    <!-- Member rows will be added here by JS -->
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <button type="button" id="add-member" class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border);">+ Add Member</button>
-                    <span id="member-count" style="color: var(--muted); font-family: monospace;">Members: 1/4</span>
+                    <button type="button" id="add-member" class="btn" style="background: #333;">+ Add Member</button>
+                    <span id="member-count" style="color: var(--text-dim);">Members: 1/4 (including leader)</span>
                 </div>
 
-                <button type="submit" class="btn" style="width: 100%; padding: 1.2rem; font-size: 1.1rem;">Register Team & Proceed to Payment</button>
+                <button type="submit" class="btn" style="width: 100%; padding: 1rem; font-size: 1.2rem;">Register Team & Proceed to Payment</button>
             </form>
         </div>
     </div>
@@ -142,7 +126,7 @@
             countDisplay.innerText = `Members: ${memberCount}/4 (including leader)`;
             if (memberCount >= 4) {
                 addBtn.disabled = true;
-                addBtn.style.opacity = '0.3';
+                addBtn.style.opacity = '0.5';
                 addBtn.style.cursor = 'not-allowed';
             } else {
                 addBtn.disabled = false;
@@ -152,34 +136,52 @@
         }
 
         function createMemberRow(index) {
-            const wrapper = document.createElement('div');
-            wrapper.style.marginBottom = '1.5rem';
-            wrapper.style.padding = '1.5rem';
-            wrapper.style.background = 'rgba(255,255,255,0.03)';
-            wrapper.style.borderRadius = '12px';
-            wrapper.style.border = '1px solid var(--border)';
-            wrapper.style.position = 'relative';
-            wrapper.style.transition = 'all 0.3s ease';
-
-            const row = document.createElement('div');
-            row.style.display = 'grid';
-            row.style.gridTemplateColumns = '1fr 1fr 1fr';
-            row.style.gap = '15px';
-            row.innerHTML = `
-                <input type="text" name="member_name" placeholder="Full Name" required>
-                <input type="email" name="member_email" placeholder="college@email.edu" required>
-                <input type="text" name="member_phone" placeholder="Phone Number" required>
+            const div = document.createElement('div');
+            div.className = 'member-row';
+            div.style.gridTemplateColumns = '1fr 1fr 1fr'; // Maintain 3 col layout
+            div.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <input type="text" name="member_name" placeholder="Full Name" required>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <input type="email" name="member_email" placeholder="college@email.edu" required>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:5px;">
+                    <input type="text" name="member_phone" placeholder="Phone Number" required>
+                </div>
+                <button type="button" class="remove-btn" onclick="removeMember(this)">×</button>
             `;
 
+            // We need a separate row for the residency status for each member to avoid name conflicts
             const statusDiv = document.createElement('div');
             statusDiv.className = 'radio-group';
-            statusDiv.style.marginTop = '15px';
+            statusDiv.style.gridColumn = 'span 3';
+            statusDiv.style.marginBottom = '15px';
             statusDiv.innerHTML = `
-                <span style="font-size:0.8rem; color:var(--muted); margin-right:10px; text-transform: uppercase;">Residency:</span>
+                <span style="font-size:0.8rem; color:var(--text-dim); margin-right:10px;">Residency:</span>
                 <input type="radio" name="member_status_${index}" value="Day Scholar" required>
                 <label>Day Scholar</label>
                 <input type="radio" name="member_status_${index}" value="Hosteller">
                 <label>Hosteller</label>
+            `;
+
+            // Wrap both in a container to keep them together
+            const wrapper = document.createElement('div');
+            wrapper.style.marginBottom = '1.5rem';
+            wrapper.style.padding = '1rem';
+            wrapper.style.background = 'rgba(255,255,255,0.05)';
+            wrapper.style.borderRadius = '8px';
+            wrapper.style.border = '1px solid #333';
+            wrapper.style.position = 'relative';
+
+            const row = document.createElement('div');
+            row.style.display = 'grid';
+            row.style.gridTemplateColumns = '1fr 1fr 1fr';
+            row.style.gap = '10px';
+            row.innerHTML = `
+                <input type="text" name="member_name" placeholder="Full Name" required>
+                <input type="email" name="member_email" placeholder="college@email.edu" required>
+                <input type="text" name="member_phone" placeholder="Phone Number" required>
             `;
 
             const removeBtn = document.createElement('button');

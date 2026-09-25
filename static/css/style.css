@@ -1,112 +1,215 @@
 :root {
-    --bg-dark: #0a0a0c;
-    --bg-card: #16161e;
-    --text-main: #e0e0e6;
-    --text-dim: #a0a0aa;
-    --accent: #7c4dff;
-    --accent-hover: #9e7aff;
-    --error: #ff5252;
-    --success: #4caf50;
+    --bg: #050510;
+    --surface: #0b0b1a;
+    --cyan: #00f5ff;
+    --blue: #0066ff;
+    --purple: #8b5cf6;
+    --magenta: #ff00aa;
+    --text: #f5f7ff;
+    --muted: #8b90a7;
+    --error: #ff3e3e;
+    --success: #00ffaa;
+    --glass: rgba(11, 11, 26, 0.7);
+    --border: rgba(0, 245, 255, 0.2);
+    --glow: 0 0 15px rgba(0, 245, 255, 0.3);
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(0, 102, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+    color: var(--text);
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    min-height: 100vh;
 }
 
 header {
-    padding: 2rem;
+    padding: 3rem 1rem;
     text-align: center;
-    background: linear-gradient(to bottom, #1a1a2e, var(--bg-dark));
+    position: relative;
+    overflow: hidden;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.5;
 }
 
 h1 {
-    font-size: 3rem;
-    color: var(--accent);
+    font-size: 4rem;
+    font-weight: 900;
+    color: #fff;
     margin: 0;
-    letter-spacing: 4px;
+    letter-spacing: 8px;
     text-transform: uppercase;
+    text-shadow: 0 0 20px var(--cyan), 0 0 40px var(--blue);
+    filter: drop-shadow(0 0 10px var(--cyan));
+}
+
+header p {
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 1.5rem;
 }
 
+/* Futuristic Cards */
 .card {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #2d2d3a;
-    transition: transform 0.2s;
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .card:hover {
     transform: translateY(-5px);
-    border-color: var(--accent);
+    border-color: var(--cyan);
+    box-shadow: 0 0 30px rgba(0, 245, 255, 0.15);
 }
 
+/* Neon Buttons */
 .btn {
-    background-color: var(--accent);
+    background: linear-gradient(135deg, var(--blue), var(--purple));
     color: white;
     border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 6px;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     display: inline-block;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px rgba(0, 102, 255, 0.4);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .btn:hover {
-    background-color: var(--accent-hover);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--cyan);
+    filter: brightness(1.2);
 }
 
+/* Forms & Inputs */
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 label {
     display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-dim);
+    margin-bottom: 0.6rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-input[type="text"], input[type="email"], select {
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
     width: 100%;
-    padding: 0.8rem;
-    background: var(--bg-dark);
-    border: 1px solid #333;
-    color: white;
-    border-radius: 6px;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
     box-sizing: border-box;
+    transition: all 0.3s ease;
+    font-family: inherit;
 }
 
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Cyberpunk Badges */
 .track-badge {
-    background: #2d2d3a;
-    color: var(--accent);
-    padding: 0.2rem 0.6rem;
+    background: rgba(0, 245, 255, 0.1);
+    color: var(--cyan);
+    padding: 0.3rem 0.8rem;
     border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: 1px solid var(--cyan);
+    box-shadow: 0 0 5px var(--cyan);
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    gap: 2rem;
 }
+
+/* Payment & QR Section */
+.qr-container {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    display: inline-block;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.qr-image {
+    display: block;
+    border-radius: 4px;
+}
+
+/* Utility Classes */
+.text-cyan { color: var(--cyan); }
+.text-purple { color: var(--purple); }
+.text-magenta { color: var(--magenta); }
+.text-muted { color: var(--muted); }
 
 #payment-loader {
     display: none;
     margin-left: 10px;
     font-style: italic;
-    color: var(--text-dim);
+    color: var(--cyan);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    h1 { font-size: 2.5rem; }
+    .container { padding: 1rem; }
+    .grid { grid-template-columns: 1fr; }
 }

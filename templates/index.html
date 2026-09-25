@@ -5,6 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NIMBUS | Hackathon</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        .action-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        .action-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            border-radius: 20px;
+            width: 350px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .action-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cyan);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.2);
+        }
+        .action-card h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--cyan);
+        }
+        .action-card .btn {
+            width: 100%;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,19 +55,20 @@
     </header>
 
     <div class="container">
-        <div style="text-align: right; margin-bottom: 2rem;">
-            <a href="{{ url_for('register') }}" class="btn">Register Team</a>
-        </div>
+        <div class="hero-section">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #fff; text-shadow: 0 0 15px var(--purple);">Welcome to the Storm</h2>
+            <p style="color: var(--muted); max-width: 600px; margin: 0 auto 3rem auto; font-size: 1.2rem;">
+                Join the most intense overnight hackathon of the year.
+                Assemble your team, push your limits, and build the future.
+            </p>
 
-        <h2>Problem Statements</h2>
-        <div class="grid">
-            {% for p in problems %}
-            <div class="card">
-                <span class="track-badge">{{ p.track }}</span>
-                <h3>{{ p.title }}</h3>
-                <p>{{ p.description }}</p>
+            <div class="action-cards">
+                <div class="action-card">
+                    <h2 class="text-cyan">New Team?</h2>
+                    <p style="color: var(--muted); margin-bottom: 2rem;">Register your team and secure your spot in the event.</p>
+                    <a href="{{ url_for('register') }}" class="btn">Register Now</a>
+                </div>
             </div>
-            {% endfor %}
         </div>
     </div>
 </body>

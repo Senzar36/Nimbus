@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIMBUS | Final Submission</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .file-input-group {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #2d2d3a;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .file-input-group label {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .upload-row {
+            display: flex;
+            gap: 10px;
+        }
+        .upload-row input {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NIMBUS</h1>
+        <p>Final Project Submission | Team: {{ team.team_name }}</p>
+    </header>
+
+    <div class="container">
+        <div class="upload-section">
+            <div class="card" style="text-align: center;">
+                <h2>Submit Your Work</h2>
+                <p style="color: var(--text-dim);">Please upload your final deliverables. Ensure files are clearly named.</p>
+            </div>
+
+            <!-- Presentation -->
+            <div class="file-input-group">
+                <label>1. Final Presentation (PDF/PPT)</label>
+                <div class="upload-row">
+                    <input type="file" id="presentation-file">
+                    <button onclick="uploadFile('presentation')" class="btn">Upload</button>
+                </div>
+                <small id="presentation-status" style="color: var(--text-dim);"></small>
+            </div>
+
+            <!-- Architecture -->
+            <div class="file-input-group">
+                <label>2. Project Architecture (Image/PDF)</label>
+                <div class="upload-row">
+                    <input type="file" id="architecture-file">
+                    <button onclick="uploadFile('architecture')" class="btn">Upload</button>
+                </div>
+                <small id="architecture-status" style="color: var(--text-dim);"></small>
+            </div>
+
+            <!-- Video -->
+            <div class="file-input-group">
+                <label>3. Demo Video (.mp4, .mov)</label>
+                <div class="upload-row">
+                    <input type="file" id="video-file">
+                    <button onclick="uploadVideo()" class="btn">Upload</button>
+                </div>
+                <small id="video-status" style="color: var(--text-dim);"></small>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="{{ url_for('dashboard') }}" class="btn" style="background: #333;">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function uploadFile(type) {
+            const fileInput = document.getElementById(`${type}-file`);
+            const status = document.getElementById(`${type}-status`);
+
+            if (!fileInput.files[0]) {
+                alert('Please select a file first');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('file_type', type);
+
+            status.innerText = 'Uploading...';
+            try {
+                const response = await fetch('/upload_file', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    status.innerText = '✅ Uploaded successfully!';
+                    status.style.color = 'var(--success)';
+                } else {
+                    status.innerText = '❌ ' + data.message;
+                    status.style.color = 'var(--error)';
+                }
+            } catch (e) {
+                status.innerText = '❌ Upload failed.';
+                status.style.color = 'var(--error)';
+            }
+        }
+
+        async function uploadVideo() {
+            const fileInput = document.getElementById('video-file');
+            const status = document.getElementById('video-status');
+
+            if (!fileInput.files[0]) {
+                alert('Please select a video file first');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('video', fileInput.files[0]);
+
+            status.innerText = 'Uploading...';
+            try {
+                const response = await fetch('/upload_video', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    status.innerText = '✅ Uploaded successfully!';
+                    status.style.color = 'var(--success)';
+                } else {
+                    status.innerText = '❌ ' + data.message;
+                    status.style.color = 'var(--error)';
+                }
+            } catch (e) {
+                status.innerText = '❌ Upload failed.';
+                status.style.color = 'var(--error)';
+            }
+        }
+    </script>
+</body>
+</html>

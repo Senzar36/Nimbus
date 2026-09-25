@@ -5,91 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NIMBUS | Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-paid { background: var(--success); color: white; }
+        .status-unpaid { background: var(--error); color: white; }
+    </style>
 </head>
 <body>
     <header>
         <h1>NIMBUS</h1>
-        <p>Team: {{ team.team_name }}</p>
+        <p>Team: {{ team.team_name }} | Status:
+            <span class="status-pill {{ 'status-paid' if team.payment_status == 'Paid' else 'status-unpaid' }}">
+                {{ team.payment_status }}
+            </span>
+        </p>
     </header>
 
     <div class="container">
-        <div class="grid">
-            <!-- Problem Selection -->
+        <div class="dashboard-grid">
+            <!-- Problem & Solution Section -->
             <div class="card">
-                <h2>Select Problem Statement</h2>
-                <p>Current: <strong>{{ team.problem_statement_id if team.problem_statement_id else 'Not Selected' }}</strong></p>
-
-                <form id="problem-form">
+                <h2>🚀 Project Definition</h2>
+                <form id="details-form">
                     <div class="form-group">
-                        <label>Choose Problem</label>
+                        <label>Select Problem Statement</label>
                         <select name="problem_id">
                             {% for p in problems %}
-                            <option value="{{ p.id }}">{{ p.track }}: {{ p.title }}</option>
+                            <option value="{{ p.id }}" {{ 'selected' if team.problem_statement_id == p.id }}>
+                                {{ p.track }}: {{ p.title }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" class="btn">Confirm Selection</button>
-                </form>
-                <div id="selection-msg" style="margin-top: 1rem;"></div>
-            </div>
-
-            <!-- Video Submission -->
-            <div class="card">
-                <h2>Project Submission</h2>
-                <p>Upload your demo video after the event ends.</p>
-                <form id="video-form">
                     <div class="form-group">
-                        <label>Video File (.mp4, .mov)</label>
-                        <input type="file" name="video" accept="video/*" required>
+                        <label>Proposed Solution</label>
+                        <textarea name="proposed_solution" rows="5" style="width: 100%; background: var(--bg-dark); color: white; border: 1px solid #333; border-radius: 6px; padding: 0.8rem;" placeholder="Explain how you plan to solve this problem...">{{ team.proposed_solution if team.proposed_solution else '' }}</textarea>
                     </div>
-                    <button type="submit" class="btn">Upload Video</button>
+                    <button type="submit" class="btn">Save Project Details</button>
                 </form>
-                <div id="upload-msg" style="margin-top: 1rem;"></div>
+                <div id="details-msg" style="margin-top: 1rem;"></div>
+
+                {% if team.proposed_solution %}
+                <div style="margin-top: 2rem; padding: 1rem; background: rgba(124, 77, 255, 0.1); border: 1px solid var(--accent); border-radius: 8px; text-align: center;">
+                    <p style="margin-bottom: 1rem;">Your project definition is complete!</p>
+                    <a href="{{ url_for('submission_page') }}" class="btn">Proceed to Final Submission &rarr;</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('problem-form').onsubmit = async function(e) {
+        document.getElementById('details-form').onsubmit = async function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            const msg = document.getElementById('selection-msg');
+            const msg = document.getElementById('details-msg');
 
             try {
-                const response = await fetch('/select_problem', {
+                const response = await fetch('/submit_details', {
                     method: 'POST',
                     body: formData
                 });
                 const data = await response.json();
                 if (data.status === 'success') {
-                    msg.innerHTML = '<span style="color:var(--success)">Problem statement updated!</span>';
+                    msg.innerHTML = '<span style="color:var(--success)">Details saved successfully!</span>';
+                    // Refresh page to show the "Proceed" button
+                    setTimeout(() => { location.reload(); }, 1000);
                 } else {
                     msg.innerHTML = '<span style="color:var(--error)">' + data.message + '</span>';
                 }
             } catch (e) {
                 msg.innerHTML = '<span style="color:var(--error)">Error occurred.</span>';
-            }
-        };
-
-        document.getElementById('video-form').onsubmit = async function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const msg = document.getElementById('upload-msg');
-
-            msg.innerHTML = 'Uploading... Please wait.';
-            try {
-                const response = await fetch('/upload_video', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                if (data.status === 'success') {
-                    msg.innerHTML = '<span style="color:var(--success)">Video uploaded successfully!</span>';
-                } else {
-                    msg.innerHTML = '<span style="color:var(--error)">' + data.message + '</span>';
-                }
-            } catch (e) {
-                msg.innerHTML = '<span style="color:var(--error)">Upload failed.</span>';
             }
         };
     </script>
