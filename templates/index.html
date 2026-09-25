@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIMBUS | Hackathon</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>NIMBUS</h1>
+        <p>Innovate. Build. Conquer.</p>
+    </header>
+
+    <div class="container">
+        <div style="text-align: right; margin-bottom: 2rem;">
+            <a href="{{ url_for('register') }}" class="btn">Register Team</a>
+        </div>
+
+        <h2>Problem Statements</h2>
+        <div class="grid">
+            {% for p in problems %}
+            <div class="card">
+                <span class="track-badge">{{ p.track }}</span>
+                <h3>{{ p.title }}</h3>
+                <p>{{ p.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

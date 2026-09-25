@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIMBUS | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>NIMBUS</h1>
+        <p>Team: {{ team.team_name }}</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <!-- Problem Selection -->
+            <div class="card">
+                <h2>Select Problem Statement</h2>
+                <p>Current: <strong>{{ team.problem_statement_id if team.problem_statement_id else 'Not Selected' }}</strong></p>
+
+                <form id="problem-form">
+                    <div class="form-group">
+                        <label>Choose Problem</label>
+                        <select name="problem_id">
+                            {% for p in problems %}
+                            <option value="{{ p.id }}">{{ p.track }}: {{ p.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Confirm Selection</button>
+                </form>
+                <div id="selection-msg" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- Video Submission -->
+            <div class="card">
+                <h2>Project Submission</h2>
+                <p>Upload your demo video after the event ends.</p>
+                <form id="video-form">
+                    <div class="form-group">
+                        <label>Video File (.mp4, .mov)</label>
+                        <input type="file" name="video" accept="video/*" required>
+                    </div>
+                    <button type="submit" class="btn">Upload Video</button>
+                </form>
+                <div id="upload-msg" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('problem-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const msg = document.getElementById('selection-msg');
+
+            try {
+                const response = await fetch('/select_problem', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    msg.innerHTML = '<span style="color:var(--success)">Problem statement updated!</span>';
+                } else {
+                    msg.innerHTML = '<span style="color:var(--error)">' + data.message + '</span>';
+                }
+            } catch (e) {
+                msg.innerHTML = '<span style="color:var(--error)">Error occurred.</span>';
+            }
+        };
+
+        document.getElementById('video-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const msg = document.getElementById('upload-msg');
+
+            msg.innerHTML = 'Uploading... Please wait.';
+            try {
+                const response = await fetch('/upload_video', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    msg.innerHTML = '<span style="color:var(--success)">Video uploaded successfully!</span>';
+                } else {
+                    msg.innerHTML = '<span style="color:var(--error)">' + data.message + '</span>';
+                }
+            } catch (e) {
+                msg.innerHTML = '<span style="color:var(--error)">Upload failed.</span>';
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIMBUS | Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>NIMBUS</h1>
+        <p>Secure Your Spot</p>
+    </header>
+
+    <div class="container">
+        <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+            <h2>Complete Payment</h2>
+            <p>Amount: <strong>₹500</strong></p>
+            <div id="payment-area">
+                <button id="pay-btn" class="btn">Pay Now</button>
+                <span id="payment-loader">Processing...</span>
+            </div>
+            <div id="success-msg" style="display:none; color: var(--success); font-weight: bold; font-size: 1.2rem;">
+                Payment Successful! Your team is now registered.
+                <br><br>
+                <a href="/login_page" class="btn">Go to Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('pay-btn').onclick = async function() {
+            const btn = this;
+            const loader = document.getElementById('payment-loader');
+            const area = document.getElementById('payment-area');
+            const success = document.getElementById('success-msg');
+
+            btn.disabled = true;
+            loader.style.display = 'inline';
+
+            try {
+                const response = await fetch('/payment', { method: 'POST' });
+                if (response.ok) {
+                    setTimeout(() => {
+                        area.style.display = 'none';
+                        success.style.display = 'block';
+                    }, 2000);
+                }
+            } catch (e) {
+                alert('Payment failed. Please try again.');
+                btn.disabled = false;
+                loader.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>

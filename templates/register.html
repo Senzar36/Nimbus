@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIMBUS | Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>NIMBUS</h1>
+        <p>Join the Storm</p>
+    </header>
+
+    <div class="container">
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <h2>Team Registration</h2>
+            <form action="/register" method="POST">
+                <div class="form-group">
+                    <label>Team Name</label>
+                    <input type="text" name="team_name" required placeholder="Enter a cool team name">
+                </div>
+                <div class="form-group">
+                    <label>Leader Email</label>
+                    <input type="email" name="leader_email" required placeholder="leader@college.edu">
+                </div>
+                <div class="form-group">
+                    <label>Member Emails (One per line)</label>
+                    <textarea name="member_email" rows="4" style="width:100%; background:var(--bg-dark); color:white; border:1px solid #333; border-radius:6px; padding:0.8rem;" placeholder="member1@college.edu&#10;member2@college.edu"></textarea>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Note: Separate emails with new lines. Only the leader can pay and select problem statements.</p>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Register Team</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
