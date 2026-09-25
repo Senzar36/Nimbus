@@ -12,7 +12,7 @@ from database import (
 )
 
 app = Flask(__name__)
-app.secret_key = 'nimbus_secret_key'
+app.secret_key = os.getenv('SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB limit
 
