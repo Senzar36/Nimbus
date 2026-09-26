@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NIMBUS | Payment</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .payment-card {
@@ -114,7 +115,14 @@
             loader.style.display = 'inline';
 
             try {
-                const response = await fetch('/payment', { method: 'POST' });
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                const response = await fetch('/payment', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                });
                 if (response.ok) {
                     setTimeout(() => {
                         area.style.display = 'none';
