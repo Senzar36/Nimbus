@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_wtf.csrf import CSRFProtect
+from pymsgbox import password
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from flask_limiter import Limiter
@@ -209,6 +210,8 @@ def admin_login():
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
 
+        print("Admin username match:", username == ADMIN_USERNAME)
+        print("Admin password match:", password == ADMIN_PASSWORD)
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
