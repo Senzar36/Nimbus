@@ -211,6 +211,9 @@ def admin_login():
 
         print("Admin username match:", username == ADMIN_USERNAME)
         print("Admin password match:", password == ADMIN_PASSWORD)
+        if ADMIN_USERNAME is None or ADMIN_PASSWORD is None:
+            return "Admin credentials are not configured on the server.", 500
+
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
