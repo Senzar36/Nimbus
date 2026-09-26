@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from database import (
@@ -14,6 +15,8 @@ from database import (
     update_project_details,
 )
 
+load_dotenv('.env.local')
+
 app = Flask(__name__)
 limiter = Limiter(
     key_func=get_remote_address,
@@ -22,6 +25,8 @@ limiter = Limiter(
 )
 csrf = CSRFProtect(app)
 app.secret_key = os.getenv('SECRET_KEY')
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
@@ -193,6 +198,26 @@ def login():
         print(f"Login error: {e}")
         return "Login failed. Please try again.", 500
 
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session['is_admin'] = True
+            return redirect(url_for('admin_dashboard'))
+
+        return "Invalid admin credentials", 401
+
+    return render_template('admin_login.html')
+
+@app.route('/admin')
+def admin_dashboard():
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+
+    return "Admin dashboard is working!"
 
 @app.route('/dashboard')
 def dashboard():

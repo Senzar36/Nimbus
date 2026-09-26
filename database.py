@@ -30,7 +30,7 @@ def init_db():
                     leader_email VARCHAR(255) UNIQUE NOT NULL,
                     leader_phone VARCHAR(30) NOT NULL,
                     leader_status VARCHAR(30) NOT NULL,
-                    payment_status VARCHAR(20) NOT NULL DEFAULT 'Unpaid',
+                    payment_status VARCHAR(20) NOT NULL DEFAULT 'Pending',
                     problem_statement VARCHAR(50) NOT NULL DEFAULT 'None',
                     proposed_solution TEXT NOT NULL DEFAULT 'None',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -228,6 +228,33 @@ def mark_team_paid(team_id):
         conn.commit()
         return updated
 
+def verify_team_payment(team_id):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE teams
+                SET payment_status = 'Verified'
+                WHERE id = %s
+                  AND payment_status = 'Paid'
+            """, (team_id,))
+            updated = cur.rowcount > 0
+
+        conn.commit()
+        return updated
+    
+def reject_team_payment(team_id):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE teams
+                SET payment_status = 'Rejected'
+                WHERE id = %s
+                  AND payment_status = 'Paid'
+            """, (team_id,))
+            updated = cur.rowcount > 0
+
+        conn.commit()
+        return updated
 
 def update_project_details(team_id, problem_id, solution):
     with get_connection() as conn:
