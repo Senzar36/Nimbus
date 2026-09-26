@@ -74,6 +74,14 @@
     <a href="{{ url_for('admin_logout') }}">Logout</a>
     <div class="stats">
 
+        <div style="margin: 2rem 0;">
+    <input
+        type="text"
+        id="teamSearch"
+        placeholder="Search by team name or leader name..."
+        style="width: 100%; padding: 12px; font-size: 1rem;"
+    >
+</div>
     <div class="stat-card">
         <h3>Total Teams</h3>
         <p>{{ stats.total }}</p>
@@ -104,7 +112,7 @@
 
         {% for team in teams %}
 
-            <div class="team">
+            <div class="team-card">
 
                 <h2>{{ team.team_name }}</h2>
 
@@ -184,6 +192,25 @@
         <p>No teams have registered yet.</p>
 
     {% endif %}
+
+    <script>
+    const searchInput = document.getElementById('teamSearch');
+    const teamCards = document.querySelectorAll('.team-card');
+
+    searchInput.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase().trim();
+
+        teamCards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+
+            if (text.includes(searchTerm)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
