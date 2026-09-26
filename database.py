@@ -269,3 +269,40 @@ def update_project_details(team_id, problem_id, solution):
 
         conn.commit()
         return updated
+
+def get_all_teams():
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    id,
+                    team_name,
+                    leader_name,
+                    leader_email,
+                    leader_phone,
+                    leader_status,
+                    payment_status,
+                    problem_statement,
+                    proposed_solution,
+                    created_at
+                FROM teams
+                ORDER BY created_at DESC
+            """)
+
+            teams = cur.fetchall()
+
+            for team in teams:
+                cur.execute("""
+                    SELECT
+                        name,
+                        email,
+                        phone,
+                        status
+                    FROM team_members
+                    WHERE team_id = %s
+                    ORDER BY id
+                """, (team["id"],))
+
+                team["members"] = cur.fetchall()
+
+            return teams

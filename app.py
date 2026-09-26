@@ -13,6 +13,7 @@ from database import (
     get_team_member_count,
     mark_team_paid,
     update_project_details,
+    get_all_teams,
 )
 
 load_dotenv('.env.local')
@@ -219,7 +220,12 @@ def admin_dashboard():
     if not session.get('is_admin'):
         return redirect(url_for('admin_login'))
 
-    return "Admin dashboard is working!"
+    teams = get_all_teams()
+
+    return render_template(
+        'admin_dashboard.html',
+        teams=teams
+    )
 
 @app.route('/dashboard')
 def dashboard():
