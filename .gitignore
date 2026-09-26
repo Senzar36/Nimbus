@@ -2,3 +2,7 @@
 .env*
 __pycache__/
 *.pyc
+.env.local
+requirements.txt
+registrations.csv
+register.html'

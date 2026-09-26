@@ -6,12 +6,14 @@
     <title>NIMBUS | Payment</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <style>
         .payment-card {
             max-width: 550px;
             margin: 0 auto;
             text-align: center;
         }
+
         .qr-wrapper {
             background: white;
             padding: 1.5rem;
@@ -21,16 +23,19 @@
             margin: 2rem 0;
             transition: all 0.3s ease;
         }
+
         .qr-wrapper:hover {
             transform: scale(1.02);
             box-shadow: 0 0 50px rgba(0, 245, 255, 0.4);
         }
+
         .qr-image {
             max-width: 280px;
             height: auto;
             display: block;
             border-radius: 8px;
         }
+
         .price-display {
             font-size: 2rem;
             color: var(--cyan);
@@ -38,6 +43,7 @@
             margin: 1.5rem 0;
             text-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
         }
+
         .payment-footer {
             margin-top: 2rem;
             color: var(--muted);
@@ -45,80 +51,132 @@
         }
     </style>
 </head>
+
 <body>
+
     <header>
         <h1>NIMBUS</h1>
         <p>Secure Your Spot</p>
     </header>
 
     <div class="container">
+
         <div class="card payment-card">
-            <h2 style="color: #fff; margin-bottom: 0.5rem;">Payment Portal</h2>
-            <p style="color: var(--muted); margin-bottom: 2rem;">Scan the QR code to complete your team registration.</p>
+
+            <h2 style="color: #fff; margin-bottom: 0.5rem;">
+                Payment Portal
+            </h2>
+
+            <p style="color: var(--muted); margin-bottom: 2rem;">
+                Scan the QR code to complete your team registration.
+            </p>
 
             <div class="price-display" id="price-display">
                 Calculating total...
             </div>
 
             <div class="qr-wrapper">
-                <img id="qr-code" src="" alt="Payment QR Code" class="qr-image">
+                <img
+                    id="qr-code"
+                    src=""
+                    alt="Payment QR Code"
+                    class="qr-image"
+                >
             </div>
 
             <div id="payment-area" style="margin-top: 2rem;">
-                <button id="pay-btn" class="btn" style="width: 200px; padding: 1rem;">I have Paid</button>
-                <span id="payment-loader" style="display:none; margin-left:15px; color:var(--cyan); font-weight: bold;">
-                    Verifying...
-                </span>
+
+                <button
+                    id="pay-btn"
+                    class="btn"
+                    style="width: 200px; padding: 1rem;"
+                >
+                    I have Paid
+                </button>
+
             </div>
 
-            <div id="success-msg" style="display:none; color: var(--success); font-weight: bold; font-size: 1.3rem; margin-top: 2rem; animation: fadeIn 0.5s ease;">
+            <div
+                id="success-msg"
+                style="
+                    display:none;
+                    color: var(--success);
+                    font-weight: bold;
+                    font-size: 1.3rem;
+                    margin-top: 2rem;
+                    animation: fadeIn 0.5s ease;
+                "
+            >
                 Payment Submitted!
+
                 <br><br>
-                <p style="color: var(--text); font-weight: normal; font-size: 1rem; opacity: 0.8;">
-                    Your payment has been submitted and is awaiting verification by the organizers.
+
+                <p
+                    style="
+                        color: var(--text);
+                        font-weight: normal;
+                        font-size: 1rem;
+                        opacity: 0.8;
+                    "
+                >
+                    Your payment has been submitted to the organizers.
+                    The payment will be checked manually by the organizers.
                     <br><br>
                     Redirecting you to the thank you page...
                 </p>
             </div>
 
-
             <div class="payment-footer">
-                Secure Payment Gateway &bull; NIMBUS 2026
+                UPI Payment &bull; NIMBUS 2026
             </div>
+
         </div>
+
     </div>
 
     <script>
+
         async function setupPayment() {
+
             try {
+
                 const response = await fetch('/get_team_count');
                 const data = await response.json();
+
                 const count = data.count;
                 const total = count * 80;
 
-                document.getElementById('price-display').innerText = `Total Amount: ₹${total}`;
+                document.getElementById('price-display').innerText =
+                    `Total Amount: ₹${total}`;
 
-                // Load the JPEG image based on the total
                 const imgPath = `/static/images/${total}.jpeg`;
+
                 document.getElementById('qr-code').src = imgPath;
 
             } catch (e) {
+
                 console.error("Error calculating payment:", e);
-                document.getElementById('price-display').innerText = "Payment Error";
+
+                document.getElementById('price-display').innerText =
+                    "Payment Error";
             }
         }
 
+
         document.getElementById('pay-btn').onclick = async function() {
+
             const btn = this;
-            const loader = document.getElementById('payment-loader');
             const area = document.getElementById('payment-area');
             const success = document.getElementById('success-msg');
 
             btn.disabled = true;
-            loader.style.display = 'inline';
 
             try {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                const csrfToken =
+                    document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content');
 
                 const response = await fetch('/payment', {
                     method: 'POST',
@@ -126,24 +184,38 @@
                         'X-CSRFToken': csrfToken
                     }
                 });
+
                 if (response.ok) {
+
+                    area.style.display = 'none';
+                    success.style.display = 'block';
+
                     setTimeout(() => {
-                        area.style.display = 'none';
-                        success.style.display = 'block';
-                        // Redirect to thank you page after 3 seconds
-                        setTimeout(() => {
-                            window.location.href = "/thankyou";
-                        }, 3000);
-                    }, 1500);
+                        window.location.href = "/thankyou";
+                    }, 3000);
+
+                } else {
+
+                    throw new Error('Payment submission failed.');
+
                 }
+
             } catch (e) {
-                alert('Payment verification failed. Please try again.');
+
+                console.error("Payment submission error:", e);
+
+                alert(
+                    'Unable to submit your payment status. Please try again.'
+                );
+
                 btn.disabled = false;
-                loader.style.display = 'none';
             }
         };
 
+
         window.onload = setupPayment;
+
     </script>
+
 </body>
 </html>

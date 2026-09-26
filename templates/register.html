@@ -345,15 +345,14 @@
             const removeBtn = document.createElement('button');
 
             removeBtn.className = 'remove-btn';
+            removeBtn.type = 'button';
             removeBtn.innerHTML = '×';
             removeBtn.type = 'button';
 
             removeBtn.onclick = function() {
-
                 wrapper.remove();
-
                 memberCount--;
-
+                renumberMembers();
                 updateCount();
             };
 
@@ -365,29 +364,22 @@
         }
 
         addBtn.onclick = function() {
-
             if (memberCount < 4) {
-
-                container.appendChild(
-                    createMemberRow(memberCount)
-                );
-
+                container.appendChild(createMemberRow(memberCount));
                 memberCount++;
-
+                renumberMembers();
                 updateCount();
             }
         };
 
         window.onload = function() {
-
-            // Add two members initially.
-            // Leader + Member 1 + Member 2 = 3 members.
             container.appendChild(createMemberRow(1));
             memberCount++;
 
             container.appendChild(createMemberRow(2));
             memberCount++;
 
+            renumberMembers();
             updateCount();
         };
 
