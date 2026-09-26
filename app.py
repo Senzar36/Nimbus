@@ -27,6 +27,8 @@ csrf = CSRFProtect(app)
 app.secret_key = os.getenv('SECRET_KEY')
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+print("ADMIN_USERNAME set:", ADMIN_USERNAME is not None)
+print("ADMIN_PASSWORD set:", ADMIN_PASSWORD is not None)
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
