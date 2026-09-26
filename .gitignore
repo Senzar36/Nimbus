@@ -6,3 +6,5 @@ __pycache__/
 requirements.txt
 registrations.csv
 register.html'
+js/
+images/

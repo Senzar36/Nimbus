@@ -3,147 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIMBUS | Payment</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>NIMBUS | Registration Complete</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <style>
-        .payment-card {
-            max-width: 550px;
-            margin: 0 auto;
+        body {
+            background: radial-gradient(
+                circle at center,
+                #1a1a2e 0%,
+                var(--bg-dark) 100%
+            );
+
+            color: var(--text-main);
+
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .thank-you-container {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+
+            padding: 4rem 1rem;
+
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .success-circle {
+            width: 90px;
+            height: 90px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: rgba(0, 245, 255, 0.08);
+            border: 2px solid var(--cyan);
+
+            color: var(--cyan);
+
+            font-size: 3rem;
+            font-weight: bold;
+
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.25);
+
+            margin-bottom: 2rem;
+        }
+
+        .thank-you-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+
+            color: #fff;
+
+            text-shadow: 0 0 15px var(--cyan);
+        }
+
+        .thank-you-subtitle {
+            max-width: 650px;
+
+            color: var(--muted);
+
+            font-size: 1.15rem;
+            line-height: 1.8;
+
+            margin-bottom: 2.5rem;
+        }
+
+        .info-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+
+            width: 100%;
+            max-width: 800px;
+
+            margin-bottom: 2.5rem;
+
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            flex: 1;
+            min-width: 220px;
+
+            padding: 1.5rem;
+
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+            border-radius: 15px;
+
             text-align: center;
         }
-        .qr-wrapper {
-            background: white;
-            padding: 1.5rem;
-            display: inline-block;
-            border-radius: 20px;
-            box-shadow: 0 0 40px rgba(0, 245, 255, 0.2);
-            margin: 2rem 0;
-            transition: all 0.3s ease;
-        }
-        .qr-wrapper:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 50px rgba(0, 245, 255, 0.4);
-        }
-        .qr-image {
-            max-width: 280px;
-            height: auto;
-            display: block;
-            border-radius: 8px;
-        }
-        .price-display {
+
+        .info-icon {
             font-size: 2rem;
-            color: var(--cyan);
-            font-weight: 800;
-            margin: 1.5rem 0;
-            text-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            margin-bottom: 0.75rem;
         }
-        .payment-footer {
-            margin-top: 2rem;
+
+        .info-text h4 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-text p {
             color: var(--muted);
-            font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .thank-you-title {
+                font-size: 2.2rem;
+            }
+
+            .thank-you-subtitle {
+                font-size: 1rem;
+            }
+
+            .info-item {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
+
     <header>
         <h1>NIMBUS</h1>
-        <p>Secure Your Spot</p>
+        <p>Innovate. Build. Conquer.</p>
     </header>
 
-    <div class="container">
-        <div class="card payment-card">
-            <h2 style="color: #fff; margin-bottom: 0.5rem;">Payment Portal</h2>
-            <p style="color: var(--muted); margin-bottom: 2rem;">Scan the QR code to complete your team registration.</p>
+    <div class="thank-you-container">
 
-            <div class="price-display" id="price-display">
-                Calculating total...
-            </div>
-
-            <div class="qr-wrapper">
-                <img id="qr-code" src="" alt="Payment QR Code" class="qr-image">
-            </div>
-
-            <div id="payment-area" style="margin-top: 2rem;">
-                <button id="pay-btn" class="btn" style="width: 200px; padding: 1rem;">I have Paid</button>
-                <span id="payment-loader" style="display:none; margin-left:15px; color:var(--cyan); font-weight: bold;">
-                    Verifying...
-                </span>
-            </div>
-
-            <div id="success-msg" style="display:none; color: var(--success); font-weight: bold; font-size: 1.3rem; margin-top: 2rem; animation: fadeIn 0.5s ease;">
-                Payment Submitted!
-                <br><br>
-                <p style="color: var(--text); font-weight: normal; font-size: 1rem; opacity: 0.8;">
-                    Your payment has been submitted and is awaiting verification by the organizers.
-                    <br><br>
-                    Redirecting you to the thank you page...
-                </p>
-            </div>
-
-
-            <div class="payment-footer">
-                Secure Payment Gateway &bull; NIMBUS 2026
-            </div>
+        <div class="success-circle">
+            ✓
         </div>
+
+        <h2 class="thank-you-title">
+            You're In!
+        </h2>
+
+        <p class="thank-you-subtitle">
+            Thank you for registering for <strong>NIMBUS</strong>.
+            Your registration has been submitted successfully.
+            Your payment will be checked manually by the organizers.
+        </p>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <div class="info-icon">⚡</div>
+
+                <div class="info-text">
+                    <h4>Get Ready</h4>
+                    <p>
+                        Prepare your ideas, your team, and get ready to build.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">🤖</div>
+
+                <div class="info-text">
+                    <h4>Build with AI</h4>
+                    <p>
+                        Explore Agentic AI and Generative AI throughout the hackathon.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">🏆</div>
+
+                <div class="info-text">
+                    <h4>See You at NIMBUS</h4>
+                    <p>
+                        Watch your inbox for further updates from the organizers.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('index') }}" class="btn">
+            Return to Home
+        </a>
+
     </div>
 
-    <script>
-        async function setupPayment() {
-            try {
-                const response = await fetch('/get_team_count');
-                const data = await response.json();
-                const count = data.count;
-                const total = count * 80;
-
-                document.getElementById('price-display').innerText = `Total Amount: ₹${total}`;
-
-                // Load the JPEG image based on the total
-                const imgPath = `/static/images/${total}.jpeg`;
-                document.getElementById('qr-code').src = imgPath;
-
-            } catch (e) {
-                console.error("Error calculating payment:", e);
-                document.getElementById('price-display').innerText = "Payment Error";
-            }
-        }
-
-        document.getElementById('pay-btn').onclick = async function() {
-            const btn = this;
-            const loader = document.getElementById('payment-loader');
-            const area = document.getElementById('payment-area');
-            const success = document.getElementById('success-msg');
-
-            btn.disabled = true;
-            loader.style.display = 'inline';
-
-            try {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                const response = await fetch('/payment', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': csrfToken
-                    }
-                });
-                if (response.ok) {
-                    setTimeout(() => {
-                        area.style.display = 'none';
-                        success.style.display = 'block';
-                        // Redirect to thank you page after 3 seconds
-                        setTimeout(() => {
-                            window.location.href = "/thankyou";
-                        }, 3000);
-                    }, 1500);
-                }
-            } catch (e) {
-                alert('Payment verification failed. Please try again.');
-                btn.disabled = false;
-                loader.style.display = 'none';
-            }
-        };
-
-        window.onload = setupPayment;
-    </script>
 </body>
 </html>
