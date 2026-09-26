@@ -41,7 +41,7 @@
 <body>
 
     <h1>Nimbus Admin Dashboard</h1>
-
+    <a href="{{ url_for('admin_logout') }}">Logout</a>
     {% if teams %}
 
         {% for team in teams %}

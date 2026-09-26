@@ -250,6 +250,11 @@ def admin_reject_payment(team_id):
 
     return "Unable to reject payment.", 400
 
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('is_admin', None)
+    return redirect(url_for('admin_login'))
+
 @app.route('/dashboard')
 def dashboard():
     team_id = session.get('team_id')
