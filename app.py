@@ -209,8 +209,6 @@ def admin_login():
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
 
-        print("Admin username match:", username == ADMIN_USERNAME)
-        print("Admin password match:", password == ADMIN_PASSWORD)
         if ADMIN_USERNAME is None or ADMIN_PASSWORD is None:
             return "Admin credentials are not configured on the server.", 500
 
@@ -218,10 +216,7 @@ def admin_login():
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
 
-        return (
-            f"Username match: {username == ADMIN_USERNAME}<br>"
-            f"Password match: {password == ADMIN_PASSWORD}"
-        ), 401
+        return "Invalid admin credentials", 401
 
     return render_template('admin_login.html')
 
