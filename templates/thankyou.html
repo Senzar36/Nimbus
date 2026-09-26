@@ -9,18 +9,30 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
+        html,
         body {
-            background: radial-gradient(
-                circle at center,
-                #1a1a2e 0%,
-                var(--bg-dark) 100%
-            );
+            background: #0b0f1a !important;
+            color: #f5f7fa !important;
+            min-height: 100vh;
+        }
 
-            color: var(--text-main);
-
+        body {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+        }
+
+        header {
+            background: #0b0f1a !important;
+            color: #f5f7fa !important;
+            border-bottom: 1px solid #252b3a;
+        }
+
+        header h1 {
+            color: #ffffff !important;
+        }
+
+        header p {
+            color: #9ca3af !important;
         }
 
         .thank-you-container {
@@ -34,6 +46,12 @@
             text-align: center;
 
             padding: 4rem 1rem;
+
+            background: radial-gradient(
+                circle at center,
+                #1a1a2e 0%,
+                #0b0f1a 70%
+            ) !important;
 
             animation: fadeIn 0.8s ease-out;
         }
@@ -49,9 +67,9 @@
             border-radius: 50%;
 
             background: rgba(0, 245, 255, 0.08);
-            border: 2px solid var(--cyan);
+            border: 2px solid #00f5ff;
 
-            color: var(--cyan);
+            color: #00f5ff;
 
             font-size: 3rem;
             font-weight: bold;
@@ -65,20 +83,24 @@
             font-size: 3rem;
             margin-bottom: 1rem;
 
-            color: #fff;
+            color: #ffffff !important;
 
-            text-shadow: 0 0 15px var(--cyan);
+            text-shadow: 0 0 15px #00f5ff;
         }
 
         .thank-you-subtitle {
             max-width: 650px;
 
-            color: var(--muted);
+            color: #a7b0c0 !important;
 
             font-size: 1.15rem;
             line-height: 1.8;
 
             margin-bottom: 2.5rem;
+        }
+
+        .thank-you-subtitle strong {
+            color: #ffffff !important;
         }
 
         .info-grid {
@@ -100,12 +122,14 @@
 
             padding: 1.5rem;
 
-            background: var(--surface);
+            background: #111827 !important;
 
-            border: 1px solid var(--border);
+            border: 1px solid #293246 !important;
             border-radius: 15px;
 
             text-align: center;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
 
         .info-icon {
@@ -114,14 +138,18 @@
         }
 
         .info-text h4 {
-            color: #fff;
+            color: #ffffff !important;
             margin-bottom: 0.5rem;
         }
 
         .info-text p {
-            color: var(--muted);
+            color: #9ca3af !important;
             margin: 0;
             line-height: 1.5;
+        }
+
+        .thank-you-container .btn {
+            color: #0b0f1a !important;
         }
 
         @keyframes fadeIn {
