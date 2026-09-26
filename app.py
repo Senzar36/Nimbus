@@ -1,7 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_wtf.csrf import CSRFProtect
-from pymsgbox import password
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from flask_limiter import Limiter
