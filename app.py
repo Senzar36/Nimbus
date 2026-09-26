@@ -221,6 +221,9 @@ def admin_login():
 
 @app.route('/admin')
 def admin_dashboard():
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+
     teams = get_all_teams()
 
     stats = {
