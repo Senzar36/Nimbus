@@ -224,9 +224,18 @@ def admin_dashboard():
 
     teams = get_all_teams()
 
+    stats = {
+        'total': len(teams),
+        'pending': sum(1 for team in teams if team['payment_status'] == 'Pending'),
+        'paid': sum(1 for team in teams if team['payment_status'] == 'Paid'),
+        'verified': sum(1 for team in teams if team['payment_status'] == 'Verified'),
+        'rejected': sum(1 for team in teams if team['payment_status'] == 'Rejected')
+    }
+
     return render_template(
         'admin_dashboard.html',
-        teams=teams
+        teams=teams,
+        stats=stats
     )
 
 @app.route('/admin/payment/<int:team_id>/verify', methods=['POST'])

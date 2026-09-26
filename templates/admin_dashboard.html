@@ -35,6 +35,36 @@
         .status {
             font-weight: bold;
         }
+        .stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stat-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+@media (max-width: 800px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
     </style>
 </head>
 
@@ -42,6 +72,34 @@
 
     <h1>Nimbus Admin Dashboard</h1>
     <a href="{{ url_for('admin_logout') }}">Logout</a>
+    <div class="stats">
+
+    <div class="stat-card">
+        <h3>Total Teams</h3>
+        <p>{{ stats.total }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Pending</h3>
+        <p>{{ stats.pending }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Paid</h3>
+        <p>{{ stats.paid }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Verified</h3>
+        <p>{{ stats.verified }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Rejected</h3>
+        <p>{{ stats.rejected }}</p>
+    </div>
+
+</div>
     {% if teams %}
 
         {% for team in teams %}
