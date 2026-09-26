@@ -12,6 +12,8 @@ from database import (
     find_team_by_id,
     get_team_member_count,
     mark_team_paid,
+    verify_team_payment,
+    reject_team_payment,
     update_project_details,
     get_all_teams,
 )
@@ -226,6 +228,27 @@ def admin_dashboard():
         'admin_dashboard.html',
         teams=teams
     )
+
+@app.route('/admin/payment/<int:team_id>/verify', methods=['POST'])
+def admin_verify_payment(team_id):
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+
+    if verify_team_payment(team_id):
+        return redirect(url_for('admin_dashboard'))
+
+    return "Unable to verify payment.", 400
+
+
+@app.route('/admin/payment/<int:team_id>/reject', methods=['POST'])
+def admin_reject_payment(team_id):
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+
+    if reject_team_payment(team_id):
+        return redirect(url_for('admin_dashboard'))
+
+    return "Unable to reject payment.", 400
 
 @app.route('/dashboard')
 def dashboard():
