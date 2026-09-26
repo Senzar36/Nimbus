@@ -218,7 +218,10 @@ def admin_login():
             session['is_admin'] = True
             return redirect(url_for('admin_dashboard'))
 
-        return "Invalid admin credentials", 401
+        return (
+            f"Username match: {username == ADMIN_USERNAME}<br>"
+            f"Password match: {password == ADMIN_PASSWORD}"
+        ), 401
 
     return render_template('admin_login.html')
 
