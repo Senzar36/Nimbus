@@ -97,8 +97,8 @@ def register():
                 })
 
         # Enforce the 2-4 member rule on the server as well.
-        if len(members) < 1:
-            return "A team must have at least 2 members including the leader.", 400
+        if len(members) < 2:
+            return "A team must have at least 3 members including the leader.", 400
 
         if len(members) > 3:
             return "A team can have a maximum of 4 members including the leader.", 400

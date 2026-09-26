@@ -81,7 +81,7 @@
         <div class="card" style="max-width: 850px; margin: 0 auto;">
             <h2 style="text-align: center; margin-bottom: 0.5rem; color: #fff;">Team Registration</h2>
             <p style="text-align: center; color: var(--muted); margin-bottom: 2.5rem;">
-                Minimum 2 members, Maximum 4 members per team.
+                Minimum 3 members, Maximum 4 members per team.
             </p>
             <form action="/register" method="POST" id="regForm">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -214,8 +214,8 @@
         };
 
         document.getElementById('regForm').onsubmit = function(e) {
-            if (memberCount < 2) {
-                alert('You must have at least 2 members in a team (including the leader).');
+            if (memberCount < 3) {
+                alert('You must have at least 3 members in a team (including the leader).');
                 e.preventDefault();
                 return false;
             }
