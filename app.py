@@ -53,7 +53,7 @@ def index():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-@limiter.limit("10 per hour")
+@limiter.limit("100 per hour")
 def register():
     if request.method == 'POST':
         team_name = request.form.get('team_name', '').strip()
