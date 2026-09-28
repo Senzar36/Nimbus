@@ -24,7 +24,7 @@ app = Flask(__name__)
 limiter = Limiter(
     key_func=get_remote_address,
     app=app,
-    default_limits=["200 per day", "50 per hour"]
+    default_limits=["2000 per day", "500 per hour"]
 )
 csrf = CSRFProtect(app)
 app.secret_key = os.getenv('SECRET_KEY')
