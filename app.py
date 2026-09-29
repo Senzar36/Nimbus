@@ -41,6 +41,9 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 if not os.path.exists('static/images'):
     os.makedirs('static/images')
 
+REGISTRATION_OPEN = False
+PAYMENT_OPEN = False
+SUBMISIONS_OPEN = False
 
 @app.before_request
 def prepare_database():
@@ -55,6 +58,8 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 @limiter.limit("1000 per hour")
 def register():
+    if not REGISTRATION_OPEN:
+        return "Registration is currently closed.", 403
     if request.method == 'POST':
         team_name = request.form.get('team_name', '').strip()
         leader_name = request.form.get('leader_name', '').strip()
@@ -145,6 +150,8 @@ def get_team_count():
 
 @app.route('/payment', methods=['GET', 'POST'])
 def payment():
+    if not PAYMENT_OPEN:
+        return "Payment is currently closed.", 403
     if not session.get('team_id'):
         return redirect(url_for('register'))
 
@@ -310,6 +317,11 @@ def dashboard():
 
 @app.route('/submit_details', methods=['POST'])
 def submit_details():
+    if not SUBMISIONS_OPEN:
+        return jsonify({
+            "status": "error",
+            "message": "Submissions are currently closed."
+        }), 403
     if not session.get('team_id'):
         return jsonify({
             "status": "error",
